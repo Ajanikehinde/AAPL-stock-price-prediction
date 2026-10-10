@@ -71,9 +71,27 @@ This result is consistent with the difficulty of extracting reliable next-day pr
 | Random Forest - price level | 18.6093 | 14.7567 |  9.3060% |
 | Random Forest - returns     |  3.6662 |  2.9310 |  1.9455% |
 | ARIMA                       | 22.1046 | 18.4771 | 11.8274% |
-| LSTM                        |  6.0268 |  4.8836 |  3.2330% |
 
 The naive baseline is included deliberately. Without a baseline, a model can appear successful simply because historical stock prices are strongly autocorrelated.
+
+**Evaluation note:** The table above covers the feature-engineered model comparison. The LSTM row has been omitted because the existing comparison CSV assigned its predictions incorrect dates. The saved LSTM was evaluated separately on the cleaned raw closing-price series, with correctly aligned dates and the same test observations for both the LSTM and previous-close baseline. The separate results are reported below.
+
+---
+
+## Separate LSTM Evaluation
+
+The saved LSTM model was evaluated on the cleaned raw AAPL closing-price series using an 80/20 chronological split. The saved scaler's minimum and maximum matched the raw training-period closing prices. The evaluation uses a 60-day lookback window, with the final 60 training observations providing context for the first test prediction.
+
+The evaluation covers **403 test observations from 27 May 2021 to 30 December 2022**.
+
+| Model | RMSE | MAE | MAPE |
+| --- | ---: | ---: | ---: |
+| Previous-close baseline | 2.9258 | 2.2061 | 1.4780% |
+| Saved LSTM | 5.9547 | 4.7899 | 3.1752% |
+
+The saved LSTM did not outperform the previous-close baseline on any of these metrics. This evaluates the existing saved artifact; it does not establish that every LSTM configuration will perform similarly. The evaluation script is `evaluate_lstm_raw_split.py`, and its date-aligned predictions are in `outputs/lstm_raw_split_evaluation.csv`.
+
+This raw-price evaluation is separate from the feature-engineered comparison above. The results should not be combined into a single model ranking without matching the target definitions, dates, and evaluation procedure.
 
 ---
 
@@ -251,25 +269,21 @@ Prediction outputs are saved to:
 outputs/
 |-- predictions_comparison.csv
 |-- rf_returns_predictions.csv
+|-- lstm_raw_split_evaluation.csv
 ```
 
-`predictions_comparison.csv` contains the aligned predictions for:
-
-* Naive baseline
-* Linear Regression
-* Random Forest price-level model
-* ARIMA
-* LSTM
+`predictions_comparison.csv` contains the existing predictions for the feature-engineered comparison. Its LSTM dates are not considered reliable for evaluation and its LSTM row is therefore excluded from the performance table above.
 
 `rf_returns_predictions.csv` contains the separately aligned next-day predictions from the return-based Random Forest experiment.
 
----
+`lstm_raw_split_evaluation.csv` contains date-aligned predictions from the separate raw-price LSTM evaluation, including actual closing prices, LSTM predictions, and the previous-close baseline.
 
 ## Project Structure
 
 ```text
 AAPL-stock-price-prediction/
 |-- AAPL_Prediction_corrected.ipynb
+|-- evaluate_lstm_raw_split.py
 |-- README.md
 |-- requirements.txt
 |-- data/
@@ -281,9 +295,9 @@ AAPL-stock-price-prediction/
 |-- outputs/
 |   |-- predictions_comparison.csv
 |   |-- rf_returns_predictions.csv
+|   |-- lstm_raw_split_evaluation.csv
 ```
 
----
 ## Technologies
 
 * Python
@@ -345,6 +359,6 @@ can fall back to the included `data/AAPL.csv` file.
 
 This project demonstrates the importance of leakage detection and realistic baselines in financial machine learning.
 
-The corrected experiments show that removing leakage substantially changes the apparent performance of the forecasting model. The Linear Regression model performs very close to the naive previous-close baseline, while the more complex Random Forest, ARIMA, and LSTM experiments do not demonstrate a forecasting advantage on this test period.
+The corrected experiments show that removing leakage substantially changes the apparent performance of the forecasting model. Linear Regression performs very close to the previous-close baseline in the feature-engineered comparison. The price-level Random Forest and ARIMA also fail to demonstrate an advantage there. In the separate raw-price evaluation, the saved LSTM performs worse than the previous-close baseline on RMSE, MAE, and MAPE.
 
 The main takeaway is methodological: **a strong-looking prediction result is not sufficient evidence of predictive skill unless the feature construction, temporal validation, leakage controls, and naive baseline are all handled correctly.**
