@@ -8,7 +8,7 @@ The project focuses not only on model performance, but also on identifying and c
 
 ## Project Overview
 
-This project uses AAPL historical price data from **2015â€“2022** to investigate whether technical indicators and historical price information can provide reliable next-day forecasting performance.
+This project uses AAPL historical price data from **2015-2022** to investigate whether technical indicators and historical price information can provide reliable next-day forecasting performance.
 
 The notebook evaluates:
 
@@ -44,7 +44,7 @@ The corrected implementation shifts the closing price before calculating the ind
 The intentionally leaky model produced an almost perfect result:
 
 ```text
-RMSE â‰ˆ 4.0 Ã— 10â»Â¹â´
+RMSE approximately 7.97 x 10^-14
 ```
 
 because the target `Close` was explicitly included among the leaky features.
@@ -66,10 +66,10 @@ This result is consistent with the difficulty of extracting reliable next-day pr
 
 | Model                       |    RMSE |     MAE |     MAPE |
 | --------------------------- | ------: | ------: | -------: |
-| Naive â€” previous close      |  2.9573 |  2.2387 |  1.4964% |
+| Naive - previous close      |  2.9573 |  2.2387 |  1.4964% |
 | Linear Regression           |  2.9857 |  2.2707 |  1.5177% |
-| Random Forest â€” price level | 18.6093 | 14.7567 |  9.3060% |
-| Random Forest â€” returns     |  3.6662 |  2.9310 |  1.9455% |
+| Random Forest - price level | 18.6093 | 14.7567 |  9.3060% |
+| Random Forest - returns     |  3.6662 |  2.9310 |  1.9455% |
 | ARIMA                       | 22.1046 | 18.4771 | 11.8274% |
 | LSTM                        |  6.0268 |  4.8836 |  3.2330% |
 
@@ -142,8 +142,8 @@ The technical indicators are calculated using a shifted closing-price series to 
 The dataset is split chronologically:
 
 ```text
-Training: 2015-03-17 â†’ 2021-06-10
-Testing:  2021-06-11 â†’ 2022-12-30
+Training: 2015-03-17 to 2021-06-10
+Testing:  2021-06-11 to 2022-12-30
 ```
 
 There is no random shuffling.
@@ -240,17 +240,17 @@ The project saves trained models to:
 
 ```text
 models/
-â”œâ”€â”€ rf_model.pkl
-â”œâ”€â”€ scaler.pkl
-â””â”€â”€ lstm_model.keras
+|-- rf_model.pkl
+|-- scaler.pkl
+|-- lstm_model.keras
 ```
 
 Prediction outputs are saved to:
 
 ```text
 outputs/
-â”œâ”€â”€ predictions_comparison.csv
-â””â”€â”€ rf_returns_predictions.csv
+|-- predictions_comparison.csv
+|-- rf_returns_predictions.csv
 ```
 
 `predictions_comparison.csv` contains the aligned predictions for:
@@ -275,12 +275,12 @@ AAPL-stock-price-prediction/
 |-- data/
 |   |-- AAPL.csv
 |-- models/
-|   |-- rf_model.pkl
-|   |-- scaler.pkl
-|   |-- lstm_model.keras
+|-- rf_model.pkl
+|-- scaler.pkl
+|-- lstm_model.keras
 |-- outputs/
-    |-- predictions_comparison.csv
-    |-- rf_returns_predictions.csv
+|-- predictions_comparison.csv
+|-- rf_returns_predictions.csv
 ```
 
 ---
@@ -310,7 +310,7 @@ Key limitations include:
 * No transaction costs or slippage are modeled.
 * No position-sizing or portfolio-management strategy is evaluated.
 * Only one stock is studied.
-* Only the 2015â€“2022 period is evaluated.
+* Only the 2015-2022 period is evaluated.
 * The models are not tested across multiple market regimes or additional tickers.
 * The return-based Random Forest uses a different prediction alignment from the main price-level models.
 * The LSTM uses the final 60 training observations as context for the beginning of the test sequence, which is standard for a windowed time-series model.
