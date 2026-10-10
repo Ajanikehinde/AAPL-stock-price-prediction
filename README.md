@@ -275,12 +275,12 @@ AAPL-stock-price-prediction/
 |-- data/
 |   |-- AAPL.csv
 |-- models/
-|-- rf_model.pkl
-|-- scaler.pkl
-|-- lstm_model.keras
+|   |-- rf_model.pkl
+|   |-- scaler.pkl
+|   |-- lstm_model.keras
 |-- outputs/
-|-- predictions_comparison.csv
-|-- rf_returns_predictions.csv
+|   |-- predictions_comparison.csv
+|   |-- rf_returns_predictions.csv
 ```
 
 ---
