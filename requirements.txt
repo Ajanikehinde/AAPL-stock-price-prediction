@@ -1,0 +1,13 @@
+numpy==2.2.6
+pandas==3.0.6
+scipy==1.18.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+tensorflow==2.21.0
+yfinance==1.7.0
+pandas-ta==0.4.71b0
+pmdarima==2.1.1
+shap==0.52.0
+joblib==1.6.0
+ipykernel==7.3.0
+notebook==7.6.2
